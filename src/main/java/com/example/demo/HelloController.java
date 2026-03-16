@@ -8,11 +8,11 @@ public class HelloController {
 
     @GetMapping("/")
     public String home() {
-        return "Hello from DevOps Demo App!";
+        return "Hello from DevOps Demo App! 2";
     }
 
     @GetMapping("/health")
     public String health() {
-        return "Application is running";
+        return "Application is running 2";
     }
 }
