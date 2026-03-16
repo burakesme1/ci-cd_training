@@ -1,11 +1,11 @@
-   pipeline {
+pipeline {
     agent any
-     
-    stages {
 
+    stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/yigitnalbant/ci-cd_training.git'
+                git branch: 'prod', 
+                    url: 'https://github.com/USERNAME/REPO.git'
             }
         }
     }
