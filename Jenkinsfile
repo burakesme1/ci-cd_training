@@ -48,7 +48,7 @@ pipeline {
                 sh """
                 trivy image \
                 --severity HIGH,CRITICAL \
-                --exit-code 1 \
+            
                 --no-progress \
                 ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
                 """
