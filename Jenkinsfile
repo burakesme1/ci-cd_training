@@ -14,24 +14,27 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
                     sonar-scanner \
-                    -Dsonar.projectKey=mercedes-cicd \
-                    -Dsonar.sources=.
+                      -Dsonar.projectKey=mercedes-cicd \
+                      -Dsonar.sources=.
                     '''
                 }
             }
         }
-        stage("Quality Gate") {
+
+        stage('Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 sh """
@@ -40,18 +43,17 @@ pipeline {
             }
         }
 
-        stage('Trivy Security Scan') { 
-            steps { 
-                sh """ 
-                trivy image \ 
-                --severity HIGH,CRITICAL \ 
-                --exit-code 1 \ 
-                --no-progress \ 
-                ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} 
-                """ 
-                } 
+        stage('Trivy Security Scan') {
+            steps {
+                sh """
+                trivy image \
+                --severity HIGH,CRITICAL \
+                --exit-code 1 \
+                --no-progress \
+                ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
         }
-        
 
         stage('Docker Login') {
             steps {
@@ -60,9 +62,9 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh """
-                    echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                    """
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    '''
                 }
             }
         }
@@ -84,6 +86,9 @@ pipeline {
         }
         failure {
             echo "Pipeline hata verdi"
+        }
+        always {
+            sh 'docker logout || true'
         }
     }
 }
