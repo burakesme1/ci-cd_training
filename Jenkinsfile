@@ -46,9 +46,7 @@ pipeline {
         stage('Trivy Security Scan') {
             steps {
                 sh """
-                trivy image \
-
-                ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
+                trivy image ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
         }
