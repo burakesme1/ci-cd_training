@@ -10,7 +10,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/yigitnalbant/ci-cd_training.git'
+                checkout scm
             }
         }
 
