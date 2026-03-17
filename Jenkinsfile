@@ -47,9 +47,7 @@ pipeline {
             steps {
                 sh """
                 trivy image \
-                --severity HIGH,CRITICAL \
-            
-                --no-progress \
+
                 ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
