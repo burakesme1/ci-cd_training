@@ -1,13 +1,23 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build 
-WORKDIR /build 
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src ./src 
-RUN MAVEN_OPTS="-Xmx1024m" mvn clean package -DskipTests
+# -------- BUILD STAGE --------
+    FROM maven:3.9.9-eclipse-temurin-17 AS builder
 
-
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-COPY --from=build /build/target/demo-0.0.1-SNAPSHOT.jar .
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "demo-0.0.1-SNAPSHOT.jar"]
+    WORKDIR /app
+    
+    COPY pom.xml .
+    RUN mvn -B -q -DskipTests dependency:go-offline
+    
+    COPY src ./src
+    
+    RUN mvn clean package -DskipTests
+    
+    
+    # -------- RUNTIME STAGE --------
+    FROM eclipse-temurin:17-jre-jammy
+    
+    WORKDIR /app
+    
+    COPY --from=builder /app/target/*.jar app.jar
+    
+    EXPOSE 8080
+    
+    ENTRYPOINT ["java","-jar","/app/app.jar"]
