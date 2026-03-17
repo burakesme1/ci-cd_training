@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = "bnalbant"
-        IMAGE_NAME = "mercedes-cicd"
+        IMAGE_NAME = "mercedes-cicd-test"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
