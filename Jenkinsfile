@@ -3,9 +3,10 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = "bnalbant"
-        IMAGE_NAME = "bnalbant/mercedes-cicd"
+        IMAGE_NAME = "mercedes-cicd"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
+
     stages {
 
         stage('Checkout') {
@@ -16,11 +17,9 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh """
-                    docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} .
-                    """
-                }
+                sh """
+                docker build -t ${DOCKERHUB_USER}/${IMAGE_NAME}:${IMAGE_TAG} .
+                """
             }
         }
 
@@ -47,14 +46,12 @@ pipeline {
                 """
             }
         }
-
     }
 
     post {
         success {
             echo "Docker image başarıyla push edildi"
         }
-
         failure {
             echo "Pipeline hata verdi"
         }
